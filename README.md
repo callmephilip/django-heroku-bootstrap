@@ -30,15 +30,15 @@ AWS_STORAGE_BUCKET_NAME = ""
 ```   
 
 4. Make sure you are logged in to Heroku
-```bash
+```
 heroku login
 ```
 5. Get a new git repository initialized
-```bash
+```
 git init
 ```   
 6. Create a new heroku project
-```bash
+```
 heroku create
 ```
 7. Run your site locally
