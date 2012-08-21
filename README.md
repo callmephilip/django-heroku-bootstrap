@@ -45,14 +45,18 @@ heroku create
 ```
 fab run
 ```
-8. Move all the static goodness to S3
+8. Move all your static goodness to S3
 ```
 fab collectstatic
 ``` 
 9. Deploy to Heroku
 ```
 git add .
+```
+```
 git commit -a -m "first commit"
+```
+```
 git push heroku master
 ```
 
