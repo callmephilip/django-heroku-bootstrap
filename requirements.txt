@@ -1,0 +1,16 @@
+Django==1.4
+simplejson==2.2.1
+lxml==2.3.5
+pyyaml==3.10
+fabric==1.4.3
+unittest2==0.5.1
+mock==1.0b1
+psycopg2==2.4.5
+dj-database-url==0.2.1
+gunicorn==0.14.6
+# make sure libevent is installed (if not, brew install libevent)
+gevent==0.13.7
+greenlet==0.4.0
+# django-storages + boto to get your static goodness to the Amazon land  
+boto==2.5.2
+django-storages==1.1.5
