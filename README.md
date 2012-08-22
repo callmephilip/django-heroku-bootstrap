@@ -5,7 +5,7 @@ Get your Django app running on Heroku in less than 5 minutes. Really.
 ## What's in the box
 
 Check out requirements.txt for details on the dependencies. DHB assumes you are using S3 for your static files when running on Heroku.
-When running locally, all statics are served either from django apps static folders or the global static folder in the root of the project
+When running locally, all statics are served from static/ folder in the root of the project
 
 All the settings are spread accross 3 files in the settings/ directory. 
 * common.py has all your standard Django jazz that is identical for dev and production environments
