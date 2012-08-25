@@ -13,7 +13,12 @@ import dj_database_url
 
 # you will need to run this before to have Postgres on your server 
 # heroku addons:add heroku-postgresql:dev
-DATABASES = {'default': dj_database_url.config(default=os.environ["HEROKU_POSTGRESQL_<COLOR>_URL"])}
+
+POSTGRES_URL = "HEROKU_POSTGRESQL_<COLOR>_URL"
+
+if os.environ.has_key(POSTGRES_URL):
+	DATABASES = {'default': dj_database_url.config(default=os.environ[POSTGRES_URL])}
+
 
 # AWS settings
 
