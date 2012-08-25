@@ -18,6 +18,8 @@ All the settings are spread accross 3 files in the settings/ directory.
 2. Run pip install -r requirements.txt. Grab a cup of tea/coffee. Come back to find all packages successfully installed.
 3. Head to settings/prod.py and update your S3 credentials
 
+### Static files
+
 ```python
 #Your Amazon Web Services access key, as a string.
 AWS_ACCESS_KEY_ID = ""
@@ -28,6 +30,32 @@ AWS_SECRET_ACCESS_KEY = ""
 #Your Amazon Web Services storage bucket name, as a string.
 AWS_STORAGE_BUCKET_NAME = ""
 ```   
+
+### Database please
+
+Of course. You first need to get Postrgres on your Heroku 
+
+```
+heroku addons:add heroku-postgresql:dev
+```
+
+Now let's figure out the url for your database. To do this let's run the following command that comes wiht DHB
+
+```
+fab what_is_my_database_url
+```
+
+The output will look something like this
+
+```
+HEROKU_POSTGRESQL_<COLOR>_URL: postgres://<user>:<password>@<host>:5432/blabla
+```
+
+Use the first portion of the string (before ':') and  head to settings/prod.py to update your database url. Mine looks like this, for example
+
+```python
+DATABASES = {'default': dj_database_url.config(default=os.environ["HEROKU_POSTGRESQL_ROSE_URL"])}
+```
 
 4. Make sure you are logged in to Heroku
 ```
@@ -58,6 +86,10 @@ git commit -a -m "first commit"
 ```
 ```
 git push heroku master
+```
+10. Sync your data with Heroku
+```
+fab remote_syncdb
 ```
 
 
