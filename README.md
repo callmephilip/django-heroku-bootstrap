@@ -9,11 +9,12 @@ Check out requirements.txt for details on the dependencies.
 DHB comes with an opinionated but powerful arsenal of tools that will help you take over the
 world with your web app in no time 
 
+* Postgres for storing data
 * Amazon S3 for static content
 * Amazon SES for emails
 * Redis as a key-value store
 * Celery for background tasks
-* Celery Beat for periodic tasks
+* Celerybeat for periodic tasks
 * Fabric for housekeeping
 
 All the settings are spread accross 3 files in the settings/ directory. 
@@ -47,7 +48,7 @@ You are most likely to see 2 distinct remotes at this point. Origin is pointing 
 ```
 pip install -r requirements.txt
 ```
-* Head to settings/prod.py and update your S3 credentials
+* Head to settings/prod.py and update your AWS credentials
 
 ```python
 #Your Amazon Web Services access key, as a string.
@@ -130,12 +131,11 @@ Once again, when running locally, make sure you have Redis server running on you
 
 ### Celery
 
-[Celery](http://celeryproject.org) allows you to run bacground tasks. DHB uses Celery coupled
-with Redis. 
+[Celery](http://celeryproject.org) allows you to run bacground tasks. DHB uses Celery coupled with Redis. 
 
-### Celery beat
+### Celerybeat
 
-Celery Beat allows you to have periodic tasks associated with your app. Tasks configuration is stored in stored in settings/celerybeat.py (cunning, I know). 
+Celerybeat allows you to have periodic tasks associated with your app. Tasks configuration is stored in settings/celerybeat.py (cunning, I know). 
 
 ## Running
 
@@ -192,5 +192,5 @@ fab run
 
 ## Example App
 
-/apps/examples contains a simple email form which you can use to test the setup. Navigate to /examples/email/ to try it
+/apps/examples contains a simple email form which you can use to test the setup. Navigate to /examples/email/ to try it. 
 
