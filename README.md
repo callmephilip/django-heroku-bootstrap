@@ -13,6 +13,7 @@ world with your web app in no time
 * Amazon SES for emails
 * Redis as a key-value store
 * Celery for background tasks
+* Fabric for housekeeping
 
 All the settings are spread accross 3 files in the settings/ directory. 
 * common.py has all your standard Django jazz that is identical for dev and production environments
@@ -33,13 +34,19 @@ heroku login
 ```
 * Create a new heroku project
 ```
-heroku create
+heroku create <name_of_your_app>
 ```
-* Being a smart developer you are using a virtual environment for your project. Activate it.
+* Sort your remotes out
+```
+git remote -v
+```
+You are most likely to see 2 distinct remotes at this point. Origin is pointing to DHB's Github and heroku pointing to the git repository for your Heroku application. Keep heroku and feel free to do whatever with the origin (remove or rename if you want to keep the upstream reference). Just saying.   
+* Being a smart developer you are using a virtual environment for your project. Create one. Activate it.
 * Run pip install -r requirements.txt. Grab a cup of tea/coffee. Come back to find all packages successfully installed.
+```
+pip install -r requirements.txt
+```
 * Head to settings/prod.py and update your S3 credentials
-
-### Static files
 
 ```python
 #Your Amazon Web Services access key, as a string.
@@ -47,7 +54,13 @@ AWS_ACCESS_KEY_ID = ""
 
 #Your Amazon Web Services secret access key, as a string.
 AWS_SECRET_ACCESS_KEY = ""
+```
 
+### Static files
+
+In settings/prod.py set the name of your S3 bucket for the project
+
+```python
 #Your Amazon Web Services storage bucket name, as a string.
 AWS_STORAGE_BUCKET_NAME = ""
 ```   
@@ -85,7 +98,7 @@ HEROKU_POSTGRESQL_<COLOR>_URL: postgres://<user>:<password>@<host>:5432/blabla
 Use the first portion of the string (before ':') and  head to settings/prod.py to update your database url. Mine looks like this, for example
 
 ```python
-DATABASES = {'default': dj_database_url.config(default=os.environ["HEROKU_POSTGRESQL_ROSE_URL"])}
+POSTGRES_URL = "HEROKU_POSTGRESQL_ROSE_URL"
 ```
 
 ### Redis
@@ -120,33 +133,40 @@ Once again, when running locally, make sure you have Redis server running on you
 with Redis. 
 
 
-7. Run your site locally
+## Running
+
+* Let's make sure all the code is up to date
+
 ```
-fab run
+git commit -a -m "initial commit"
+git push heroku master
 ```
-8. Move all your static goodness to S3
+
+Consider another hot beverage at this point. Might take a while.
+
+* Sync databases
+
+```
+fab syncdb
+fab remote_syncdb
+```
+
+* Move all your static goodness to S3
 ```
 fab collectstatic
 ``` 
-9. Deploy to Heroku
-```
-git add .
-```
-```
-git commit -a -m "first commit"
-```
-```
-git push heroku master
-```
-10. Sync your data with Heroku
-```
-fab remote_syncdb
-```
-11. Make sure both web instance and the celeryd worker are up
+
+* Make sure both web instance and the celeryd worker are up
 ```
 heroku ps 
 ```
 You should see both celeryd and web running. If celeryd is not there, run the following
 ```
 heroku ps:scale celeryd=1
+```
+
+* Ta da! Your app is up running on Heroku
+* To run the local version:
+```
+fab run
 ```
