@@ -169,8 +169,18 @@ heroku ps:scale celeryd=1
 ```
 
 * Ta da! Your app is up running on Heroku
+
+```
+heroku open
+```
+
 * To run the local version:
 
 ```
 fab run
 ```
+
+## Example App
+
+/apps/examples contains applications an example email form which you can use to test the setup. Navigate to /examples/email/ to try it
+

@@ -1,5 +1,7 @@
 *.py[co]
 
+*.db
+
 # Packages
 *.egg
 *.egg-info
