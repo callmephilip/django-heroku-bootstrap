@@ -17,25 +17,29 @@ world with your web app in no time
 All the settings are spread accross 3 files in the settings/ directory. 
 * common.py has all your standard Django jazz that is identical for dev and production environments
 * dev.py contains development specific settings 
-* prod.py contains production specific settings and overrides
+* prod.py contains production specific settings
 
 ## Bootstrapping Your awesome app
 
-1. Make sure you are logged in to Heroku
+* Clone DHB
+```
+git clone https://github.com/callmephilip/django-heroku-bootstrap.git
+```
+* Make sure you are logged in to Heroku
 ```
 heroku login
 ```
-2. Get a new git repository initialized
+* Get a new git repository initialized
 ```
 git init
 ```   
-3. Create a new heroku project
+* Create a new heroku project
 ```
 heroku create
 ```
-4. Being a smart developer you are using a virtual environment for your project. Activate it.
-5. Run pip install -r requirements.txt. Grab a cup of tea/coffee. Come back to find all packages successfully installed.
-6. Head to settings/prod.py and update your S3 credentials
+* Being a smart developer you are using a virtual environment for your project. Activate it.
+* Run pip install -r requirements.txt. Grab a cup of tea/coffee. Come back to find all packages successfully installed.
+* Head to settings/prod.py and update your S3 credentials
 
 ### Static files
 
