@@ -182,5 +182,5 @@ fab run
 
 ## Example App
 
-/apps/examples contains applications a simple email form which you can use to test the setup. Navigate to /examples/email/ to try it
+/apps/examples contains a simple email form which you can use to test the setup. Navigate to /examples/email/ to try it
 
