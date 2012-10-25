@@ -152,21 +152,25 @@ fab remote_syncdb
 ```
 
 * Move all your static goodness to S3
+
 ```
 fab collectstatic
 ``` 
 
 * Make sure both web instance and the celeryd worker are up
+
 ```
 heroku ps 
 ```
 You should see both celeryd and web running. If celeryd is not there, run the following
+
 ```
 heroku ps:scale celeryd=1
 ```
 
 * Ta da! Your app is up running on Heroku
 * To run the local version:
+
 ```
 fab run
 ```
