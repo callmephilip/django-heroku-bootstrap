@@ -96,7 +96,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'djcelery',
 )
 
+#CELERY SETUP
 
+BROKER_URL = os.getenv('REDISTOGO_URL','redis://localhost:6379')
+
+import djcelery
+djcelery.setup_loader()
 
