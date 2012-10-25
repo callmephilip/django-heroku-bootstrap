@@ -13,6 +13,7 @@ world with your web app in no time
 * Amazon SES for emails
 * Redis as a key-value store
 * Celery for background tasks
+* Celery Beat for periodic tasks
 * Fabric for housekeeping
 
 All the settings are spread accross 3 files in the settings/ directory. 
@@ -132,6 +133,9 @@ Once again, when running locally, make sure you have Redis server running on you
 [Celery](http://celeryproject.org) allows you to run bacground tasks. DHB uses Celery coupled
 with Redis. 
 
+### Celery beat
+
+Celery Beat allows you to have periodic tasks associated with your app. Tasks configuration is stored in stored in settings/celerybeat.py (cunning, I know). 
 
 ## Running
 
@@ -166,6 +170,12 @@ You should see both celeryd and web running. If celeryd is not there, run the fo
 
 ```
 heroku ps:scale celeryd=1
+```
+
+Same applies to celerybeat (assuming you need it):
+
+```
+heroku ps:scale celerybeat=1
 ```
 
 * Ta da! Your app is up running on Heroku

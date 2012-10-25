@@ -5,3 +5,7 @@ import logging
 @task()
 def send_a_letter(sender, recipient, subject, body):
 	send_mail(subject, body, sender, [recipient], fail_silently=False)
+
+@task()
+def report_errors():
+	logging.error("reporting errors")
