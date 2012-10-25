@@ -21,6 +21,8 @@ All the settings are spread accross 3 files in the settings/ directory.
 
 ## Bootstrapping Your awesome app
 
+### Basics
+
 * Clone DHB
 ```
 git clone https://github.com/callmephilip/django-heroku-bootstrap.git
@@ -29,10 +31,6 @@ git clone https://github.com/callmephilip/django-heroku-bootstrap.git
 ```
 heroku login
 ```
-* Get a new git repository initialized
-```
-git init
-```   
 * Create a new heroku project
 ```
 heroku create
@@ -56,7 +54,7 @@ AWS_STORAGE_BUCKET_NAME = ""
 
 ### Email
 
-Assuming you've provided your AWS credentials in the settings file, email will just work. When running locally, emails will be dumped in the console. In production, DHB will send stuff through Amazon SES (make sure you use a verified sender address when sending emails with SES) 
+Assuming you've provided your AWS credentials in the settings file, email will just work. When running locally, emails will be dumped in the console. In production, DHB will send your love letters through Amazon SES (make sure you use a verified sender address when sending emails with SES) 
 
 ```python
 from django.core.mail import send_mail
