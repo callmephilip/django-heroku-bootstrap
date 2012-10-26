@@ -85,23 +85,7 @@ Of course. You first need to get Postrgres on your Heroku
 heroku addons:add heroku-postgresql:dev
 ```
 
-Now let's figure out the url for your database. To do this let's run the following command that comes wiht DHB
-
-```
-fab what_is_my_database_url
-```
-
-The output will look something like this
-
-```
-HEROKU_POSTGRESQL_<COLOR>_URL: postgres://<user>:<password>@<host>:5432/blabla
-```
-
-Use the first portion of the string (before ':') and  head to settings/prod.py to update your database url. Mine looks like this, for example
-
-```python
-POSTGRES_URL = "HEROKU_POSTGRESQL_ROSE_URL"
-```
+And you should be set.
 
 ### Redis
 

@@ -10,15 +10,7 @@ DEBUG = TEMPLATE_DEBUG = False
 
 import dj_database_url
 
-
-# you will need to run this before to have Postgres on your server 
-# heroku addons:add heroku-postgresql:dev
-
-POSTGRES_URL = "HEROKU_POSTGRESQL_<COLOR>_URL"
-
-if os.environ.has_key(POSTGRES_URL):
-	DATABASES = {'default': dj_database_url.config(default=os.environ[POSTGRES_URL])}
-
+DATABASES = {'default' : dj_database_url.config() }  
 
 # AWS settings
 
