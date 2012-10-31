@@ -178,3 +178,9 @@ fab run
 
 /apps/examples contains a simple email form which you can use to test the setup. Navigate to /examples/email/ to try it. 
 
+## Roadmap
+
+* Schema migrations with South
+* Tests
+* Caching
+* File uploads
