@@ -1,6 +1,10 @@
 *.py[co]
 
+# Local data files
 *.db
+
+# South migrations
+migrations
 
 # Packages
 *.egg

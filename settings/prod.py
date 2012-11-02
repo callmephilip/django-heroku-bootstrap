@@ -1,6 +1,6 @@
 import os
 from common import *
-
+from aws import *
 
 INSTALLED_APPS += (
     'storages',
@@ -12,19 +12,6 @@ import dj_database_url
 
 DATABASES = {'default' : dj_database_url.config() }  
 
-# AWS settings
-
-#Your Amazon Web Services access key, as a string.
-AWS_ACCESS_KEY_ID = ""
-
-#Your Amazon Web Services secret access key, as a string.
-AWS_SECRET_ACCESS_KEY = ""
-
-#Your Amazon Web Services storage bucket name, as a string.
-AWS_STORAGE_BUCKET_NAME = ""
-
-#Additional headers to pass to S3
-AWS_HEADERS = {}
 
 #Configure static content to be served form S3 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
