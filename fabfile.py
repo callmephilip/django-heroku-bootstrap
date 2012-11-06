@@ -1,42 +1,23 @@
 from fabric.api import *
-import os
+import os, sys
 
-def init():
-	print "Initializing your django app"
-	print "----------------------------"
 
-	print "Installing dependencies locally (might take a while)..."
+def patch_python_path(f):
+	def wrap(*args, **kwargs):
 
-	local("sudo pip install -r requirements.txt")
+		print "patching python path"
 
-	print "Pick a name for your heroku app"
-	
-	app_name = raw_input()
-	local("heroku login")
-	local("heroku create %s" % app_name)
+		if not os.environ.has_key("PYTHONPATH"):
+			os.environ["PYTHONPATH"] = ""
 
-	print "Adding PostgresSQL to Heroku"
-	local("heroku addons:add heroku-postgresql:dev")
+		if not ('.' in os.environ["PYTHONPATH"].split(":")):
+			print "adding . to the python path"			
+			os.environ["PYTHONPATH"] = ".:%s" % os.environ["PYTHONPATH"] 
 
-	print "Adding RedisToGo to Heroku"
-	local("heroku addons:add redistogo:nano")
+		return f(*args, **kwargs)
+	return wrap
 
-	print "Syncing code with heroku"
-
-	local("git add .")
-	local("git commit -a -m 'initial app bootstrap'")
-	local("git push heroku master")
-
-	print "Syncing with remote database"
-
-	remote_syncdb()
-
-	print "Transferring static files to Amazon"
-
-	collectstatic()
-
-	print "Done. Your app is bootstrapped and ready to go"
-
+@patch_python_path
 def deploy():
 	print "Deploying your application"
 	print "----------------------------"
@@ -52,13 +33,15 @@ def deploy():
 	print "Syncing remote database"
 	remote_migrate()
 
+@patch_python_path
 def run():
 	print "Syncing database"
 	local_migrate()
 	local("foreman start -f Procfile.dev")
 
+@patch_python_path
 def syncdb():
-    local("python manage.py syncdb --settings=settings.dev") 
+    local("python manage.py syncdb --settings=%s.settings.dev" % figure_out_project_name()) 
 
 def remote_syncdb():
     local("heroku run python manage.py syncdb --setting=settings.prod")
@@ -66,6 +49,7 @@ def remote_syncdb():
 def what_is_my_database_url():
     local("heroku config | grep POSTGRESQL")
 
+@patch_python_path
 def collectstatic():
     local("python manage.py collectstatic --settings=settings.prod")
 
@@ -76,9 +60,17 @@ def __migrate(remote):
 	def enumerate_apps():
 		return [ name for name in os.listdir(apps_dir) if os.path.isdir(os.path.join(apps_dir, name)) ]
 
+	def app_has_models(app_name):
+		return os.path.exists(os.path.join(apps_dir, app_name, "models.py"))
+
 	apps = enumerate_apps()
 
 	for app in apps:
+
+		#don't attempt any migration related actions unless there are models associated with the app
+		if not app_has_models(app):
+			continue
+
 		print "Checking migration situation for %s" % app
 
 		if not os.path.exists(os.path.join(apps_dir,app,"migrations")):
@@ -95,8 +87,10 @@ def __migrate(remote):
 			else:
 				local("python manage.py migrate apps.%s --settings=settings.dev" % (app))
 
+@patch_python_path
 def local_migrate():
 	__migrate(False)
 
+@patch_python_path
 def remote_migrate():
 	__migrate(True)
