@@ -48,7 +48,7 @@ You are most likely to see 2 distinct remotes at this point. Origin is pointing 
 ```
 pip install -r requirements.txt
 ```
-* Head to settings/prod.py and update your AWS credentials
+* Head to settings/aws.py and update your AWS credentials
 
 ```python
 #Your Amazon Web Services access key, as a string.
@@ -60,7 +60,7 @@ AWS_SECRET_ACCESS_KEY = ""
 
 ### Static files
 
-In settings/prod.py set the name of your S3 bucket for the project
+In settings/aws.py set the name of your S3 bucket for the project
 
 ```python
 #Your Amazon Web Services storage bucket name, as a string.
