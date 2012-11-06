@@ -4,14 +4,10 @@ import os, sys
 
 def patch_python_path(f):
 	def wrap(*args, **kwargs):
-
-		print "patching python path"
-
 		if not os.environ.has_key("PYTHONPATH"):
 			os.environ["PYTHONPATH"] = ""
 
 		if not ('.' in os.environ["PYTHONPATH"].split(":")):
-			print "adding . to the python path"			
 			os.environ["PYTHONPATH"] = ".:%s" % os.environ["PYTHONPATH"] 
 
 		return f(*args, **kwargs)
