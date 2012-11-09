@@ -85,12 +85,12 @@ def __migrate(remote):
 			else:
 				local("python manage.py schemamigration apps.%s --initial --settings=settings.dev" % (app))
 
-	with settings(warn_only=True):
-		print "Migrating %s ..." % app
-		if remote:
-			local("heroku run python manage.py migrate apps.%s --settings=settings.prod" % (app))
-		else:
-			local("python manage.py migrate apps.%s --settings=settings.dev" % (app))
+		with settings(warn_only=True):
+			print "Migrating %s ..." % app
+			if remote:
+				local("heroku run python manage.py migrate apps.%s --settings=settings.prod" % (app))
+			else:
+				local("python manage.py migrate apps.%s --settings=settings.dev" % (app))
 
 @patch_python_path
 def local_migrate():
