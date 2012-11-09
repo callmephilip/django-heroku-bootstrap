@@ -37,13 +37,13 @@ def run():
 
 @patch_python_path
 def syncdb():
-    local("python manage.py syncdb --settings=settings.dev") 
+	local("python manage.py syncdb --settings=settings.dev") 
 
 def remote_syncdb():
-    local("heroku run python manage.py syncdb --setting=settings.prod")
+	local("heroku run python manage.py syncdb --setting=settings.prod")
 
 def what_is_my_database_url():
-    local("heroku config | grep POSTGRESQL")
+	local("heroku config | grep POSTGRESQL")
 
 @patch_python_path
 def collectstatic():
@@ -72,7 +72,6 @@ def __migrate(remote):
 				local("python manage.py migrate apps.%s --settings=settings.dev" % (app))
 
 	for app in apps:
-
 		#don't attempt any migration related actions unless there are models associated with the app
 		if not app_has_models(app):
 			continue
@@ -86,12 +85,12 @@ def __migrate(remote):
 			else:
 				local("python manage.py schemamigration apps.%s --initial --settings=settings.dev" % (app))
 
-		with settings(warn_only=True):
-			print "Migrating %s ..." % app
-			if remote:
-				local("heroku run python manage.py migrate apps.%s --settings=settings.prod" % (app))
-			else:
-				local("python manage.py migrate apps.%s --settings=settings.dev" % (app))
+	with settings(warn_only=True):
+		print "Migrating %s ..." % app
+		if remote:
+			local("heroku run python manage.py migrate apps.%s --settings=settings.prod" % (app))
+		else:
+			local("python manage.py migrate apps.%s --settings=settings.dev" % (app))
 
 @patch_python_path
 def local_migrate():
