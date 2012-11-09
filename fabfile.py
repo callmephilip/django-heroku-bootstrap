@@ -37,7 +37,7 @@ def run():
 
 @patch_python_path
 def syncdb():
-    local("python manage.py syncdb --settings=%s.settings.dev" % figure_out_project_name()) 
+    local("python manage.py syncdb --settings=settings.dev") 
 
 def remote_syncdb():
     local("heroku run python manage.py syncdb --setting=settings.prod")
@@ -47,7 +47,7 @@ def what_is_my_database_url():
 
 @patch_python_path
 def collectstatic():
-    local("python manage.py collectstatic --settings=settings.prod")
+	local("python manage.py collectstatic --noinput --settings=settings.static")
 
 def __migrate(remote):
 
@@ -60,6 +60,16 @@ def __migrate(remote):
 		return os.path.exists(os.path.join(apps_dir, app_name, "models.py"))
 
 	apps = enumerate_apps()
+
+	#add 3rd party apps that use migrations
+
+	for app in ["djcelery"]:
+		with settings(warn_only=True):
+			print "Migrating %s ..." % app
+			if remote:
+				local("heroku run python manage.py migrate apps.%s --settings=settings.prod" % (app))
+			else:
+				local("python manage.py migrate apps.%s --settings=settings.dev" % (app))
 
 	for app in apps:
 
@@ -85,8 +95,10 @@ def __migrate(remote):
 
 @patch_python_path
 def local_migrate():
+	syncdb()
 	__migrate(False)
 
 @patch_python_path
 def remote_migrate():
+	remote_syncdb()
 	__migrate(True)
