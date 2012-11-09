@@ -1,6 +1,7 @@
 import os
 from common import *
 from aws import *
+from tools.heroku import database_config
 
 INSTALLED_APPS += (
     'storages',
@@ -8,10 +9,7 @@ INSTALLED_APPS += (
 
 DEBUG = TEMPLATE_DEBUG = False
 
-import dj_database_url
-
-DATABASES = {'default' : dj_database_url.config() }  
-
+DATABASES = {'default' : database_config() }
 
 #Configure static content to be served form S3 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
