@@ -17,10 +17,13 @@ world with your web app in no time
 * Celerybeat for periodic tasks
 * Fabric for housekeeping
 
-All the settings are spread accross 3 files in the settings/ directory. 
+All the settings are spread accross 6 files in the settings/ directory.
+* aws.py contains AWS credentials and settings 
+* celerybeat.py has Celerybeat's schedule configuration 
 * common.py has all your standard Django jazz that is identical for dev and production environments
 * dev.py contains development specific settings 
 * prod.py contains production specific settings
+* static.py is used for collecstatic routine
 
 ## Bootstrapping Your awesome app
 
@@ -127,23 +130,19 @@ Celerybeat allows you to have periodic tasks associated with your app. Tasks con
 
 ```
 git commit -a -m "initial commit"
-git push heroku master
 ```
 
-Consider another hot beverage at this point. Might take a while.
-
-* Sync databases
+* Now you can deploy your app
 
 ```
-fab syncdb
-fab remote_syncdb
+fab deploy
 ```
 
-* Move all your static goodness to S3
+Deployment script takes care of several things
 
-```
-fab collectstatic
-``` 
+** Pushing code to Heroku
+** Moving static assets to S3
+** Synchronizing database  
 
 * Make sure both web instance and the celeryd worker are up
 
