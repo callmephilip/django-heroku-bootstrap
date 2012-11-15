@@ -1,5 +1,9 @@
 import os, re
 import dj_database_url
+from fabric.api import local, settings
+
+def start_foreman(proc_file="Procfile.dev"):
+    local("foreman start -f %s" % proc_file)
 
 def database_config(env_varibale_pattern="HEROKU_POSTGRESQL_\S+_URL", default_env_variable="DATABASE_URL"):
 

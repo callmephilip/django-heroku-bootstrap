@@ -1,103 +1,91 @@
 from fabric.api import *
+from functools import wraps
 import os, sys
 
+__all__ = ['deploy','run','collectstatic']
 
 def patch_python_path(f):
+	@wraps(f)	 	
 	def wrap(*args, **kwargs):
+		ROOT = os.pathsep.join([os.path.abspath(os.path.dirname(__file__))])
+
 		if not os.environ.has_key("PYTHONPATH"):
 			os.environ["PYTHONPATH"] = ""
 
-		if not ('.' in os.environ["PYTHONPATH"].split(":")):
-			os.environ["PYTHONPATH"] = ".:%s" % os.environ["PYTHONPATH"] 
+		if not (ROOT in os.environ["PYTHONPATH"].split(":")):
+			os.environ["PYTHONPATH"] = "%s:%s" % (os.environ["PYTHONPATH"], ROOT)
+
+		if not ROOT in sys.path:
+			sys.path.append(ROOT)
 
 		return f(*args, **kwargs)
 	return wrap
 
 @patch_python_path
 def deploy():
-	print "Deploying your application"
-	print "----------------------------"
+	from tools.git import check_git_state, is_git_clean
+	from tools.database import needsdatabase, local_migrate, remote_migrate, remote_syncdb
+	from tools.apps import enumerate_apps
 
-	print "NOTE: We'll only deploy stuff that has been committed"
+	@check_git_state
+	@needsdatabase
+	def __deploy():
+		print "Deploying your application"
+		print "----------------------------"
 
-	print "Transferring static files to S3"
-	collectstatic()	
+		print "Transferring static files to S3"
+		collectstatic()	
 
-	print "Pushing code on Heroku"
-	local("git push heroku master")
+		print "Migrations..."
 
-	print "Syncing remote database"
-	remote_migrate()
+		for app in enumerate_apps():
+			local_migrate(app)
+			
+		if is_git_clean():
+			print "Pushing code on Heroku"
+			local("git push heroku master")
+		else:
+			print "Yo! Commit your migrations first, kido"
+			return
+
+
+		print "Sync remote database"
+		remote_syncdb()
+
+
+		for app in ["djcelery"]:
+			with settings(warn_only=True):
+				print "Migrating %s ..." % app
+				local("heroku run python manage.py migrate %s --settings=settings.prod" % (app))
+
+		for app in enumerate_apps():
+			remote_migrate(app)
+
+	__deploy()
 
 @patch_python_path
 def run():
-	print "Syncing database"
-	local_migrate()
-	local("foreman start -f Procfile.dev")
+	print sys.path
 
-@patch_python_path
-def syncdb():
-	local("python manage.py syncdb --settings=settings.dev") 
+	from tools.database import needsdatabase, local_migrate
+	from tools.apps import enumerate_apps
+	from tools.heroku import start_foreman
 
-def remote_syncdb():
-	local("heroku run python manage.py syncdb --setting=settings.prod")
+	@needsdatabase
+	def __run():
+		for app in ["djcelery"]:
+			with settings(warn_only=True):
+				print "Migrating %s ..." % app
+				local("python manage.py migrate %s --settings=settings.dev" % (app))
+				
+		for app in enumerate_apps():
+			with settings(warn_only=True):
+				local_migrate(app)
 
-def what_is_my_database_url():
-	local("heroku config | grep POSTGRESQL")
+		start_foreman()		
+
+	__run()
 
 @patch_python_path
 def collectstatic():
-	local("python manage.py collectstatic --noinput --settings=settings.static")
-
-def __migrate(remote):
-
-	apps_dir = "./apps"
-
-	def enumerate_apps():
-		return [ name for name in os.listdir(apps_dir) if os.path.isdir(os.path.join(apps_dir, name)) ]
-
-	def app_has_models(app_name):
-		return os.path.exists(os.path.join(apps_dir, app_name, "models.py"))
-
-	apps = enumerate_apps()
-
-	#add 3rd party apps that use migrations
-
-	for app in ["djcelery"]:
-		with settings(warn_only=True):
-			print "Migrating %s ..." % app
-			if remote:
-				local("heroku run python manage.py migrate apps.%s --settings=settings.prod" % (app))
-			else:
-				local("python manage.py migrate apps.%s --settings=settings.dev" % (app))
-
-	for app in apps:
-		#don't attempt any migration related actions unless there are models associated with the app
-		if not app_has_models(app):
-			continue
-
-		print "Checking migration situation for %s" % app
-
-		if not os.path.exists(os.path.join(apps_dir,app,"migrations")):
-			print "Running initial schema migration for %s" % app
-			if remote:
-				local("heroku run python manage.py schemamigration apps.%s --initial --settings=settings.prod" % (app))
-			else:
-				local("python manage.py schemamigration apps.%s --initial --settings=settings.dev" % (app))
-
-		with settings(warn_only=True):
-			print "Migrating %s ..." % app
-			if remote:
-				local("heroku run python manage.py migrate apps.%s --settings=settings.prod" % (app))
-			else:
-				local("python manage.py migrate apps.%s --settings=settings.dev" % (app))
-
-@patch_python_path
-def local_migrate():
-	syncdb()
-	__migrate(False)
-
-@patch_python_path
-def remote_migrate():
-	remote_syncdb()
-	__migrate(True)
+    local("python manage.py collectstatic --noinput --settings=settings.static")

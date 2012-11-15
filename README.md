@@ -61,6 +61,24 @@ AWS_ACCESS_KEY_ID = ""
 AWS_SECRET_ACCESS_KEY = ""
 ```
 
+* Put a database on your Heroku
+
+```
+heroku addons:add heroku-postgresql:dev
+```
+
+* Running your app locally
+
+```
+fab run
+```
+
+* Deploy your application
+
+```
+fab deploy
+``` 
+
 ### Static files
 
 In settings/aws.py set the name of your S3 bucket for the project
