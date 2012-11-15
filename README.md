@@ -2,32 +2,7 @@
 
 Get your Django app running on Heroku in less than 5 minutes. Really.
 
-## What's in the box
-
-Check out requirements.txt for details on the dependencies. 
-
-DHB comes with an opinionated but powerful arsenal of tools that will help you take over the
-world with your web app in no time 
-
-* Postgres for storing data
-* Amazon S3 for static content
-* Amazon SES for emails
-* Redis as a key-value store
-* Celery for background tasks
-* Celerybeat for periodic tasks
-* Fabric for housekeeping
-
-All the settings are spread accross 6 files in the settings/ directory.
-* aws.py contains AWS credentials and settings 
-* celerybeat.py has Celerybeat's schedule configuration 
-* common.py has all your standard Django jazz that is identical for dev and production environments
-* dev.py contains development specific settings 
-* prod.py contains production specific settings
-* static.py is used for collecstatic routine
-
-## Bootstrapping Your awesome app
-
-### Basics
+## Quick start
 
 * Clone DHB
 ```
@@ -78,6 +53,29 @@ fab run
 ```
 fab deploy
 ``` 
+
+## What's in the box
+
+Check out requirements.txt for details on the dependencies. 
+
+DHB comes with an opinionated but powerful arsenal of tools that will help you take over the
+world with your web app in no time 
+
+* Postgres for storing data
+* Amazon S3 for static content
+* Amazon SES for emails
+* Redis as a key-value store
+* Celery for background tasks
+* Celerybeat for periodic tasks
+* Fabric for housekeeping
+
+All the settings are spread accross 6 files in the settings/ directory.
+* aws.py contains AWS credentials and settings 
+* celerybeat.py has Celerybeat's schedule configuration 
+* common.py has all your standard Django jazz that is identical for dev and production environments
+* dev.py contains development specific settings 
+* prod.py contains production specific settings
+* static.py is used for collecstatic routine
 
 ### Static files
 
