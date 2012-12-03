@@ -33,9 +33,6 @@ def deploy():
 		print "Deploying your application"
 		print "----------------------------"
 
-		print "Transferring static files to S3"
-		collectstatic()	
-
 		print "Migrations..."
 
 		for app in enumerate_apps():
@@ -45,8 +42,9 @@ def deploy():
 			print "Pushing code on Heroku"
 			local("git push heroku master")
 		else:
-			print "Yo! Commit your migrations first, kido"
-			return
+			print "Committing migrations..."
+			local("git add .")
+			local("git commit -a -m '[DHB] data migrations'")
 
 
 		print "Sync remote database"
@@ -60,6 +58,9 @@ def deploy():
 
 		for app in enumerate_apps():
 			remote_migrate(app)
+
+		print "Transferring static files to S3"
+		collectstatic()	
 
 	__deploy()
 
