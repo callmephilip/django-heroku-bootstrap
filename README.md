@@ -12,7 +12,7 @@ git clone https://github.com/callmephilip/django-heroku-bootstrap.git
 ```
 heroku login
 ```
-* Create a new heroku project
+* Create a new heroku application
 ```
 heroku create <name_of_your_app>
 ```
