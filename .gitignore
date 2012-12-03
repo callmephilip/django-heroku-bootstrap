@@ -3,9 +3,6 @@
 # Local data files
 *.db
 
-# South migrations
-migrations
-
 # Packages
 *.egg
 *.egg-info
