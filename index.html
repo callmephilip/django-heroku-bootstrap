@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Django-heroku-bootstrap by callmephilip</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Django-heroku-bootstrap</h1>
+        <p>Get your Django app running on Heroku in less than 5 minutes</p>
+
+        <p class="view"><a href="https://github.com/callmephilip/django-heroku-bootstrap">View the Project on GitHub <small>callmephilip/django-heroku-bootstrap</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/callmephilip/django-heroku-bootstrap/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/callmephilip/django-heroku-bootstrap/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/callmephilip/django-heroku-bootstrap">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Django Heroku Bootstrap (DHB)</h1>
+
+<p>Get your Django app running on Heroku in less than 5 minutes. Really.</p>
+
+<h2>Quick start</h2>
+
+<ul>
+<li>Clone DHB
+<code>
+git clone https://github.com/callmephilip/django-heroku-bootstrap.git
+</code>
+</li>
+<li>Make sure you are logged in to Heroku
+<code>
+heroku login
+</code>
+</li>
+<li>Create a new heroku project
+<code>
+heroku create &lt;name_of_your_app&gt;
+</code>
+</li>
+<li>Sort your remotes out
+<code>
+git remote -v
+</code>
+You are most likely to see 2 distinct remotes at this point. Origin is pointing to DHB's Github and heroku pointing to the git repository for your Heroku application. Keep heroku and feel free to do whatever with the origin (remove or rename if you want to keep the upstream reference). Just saying.<br>
+</li>
+<li>Being a smart developer you are using a virtual environment for your project. Create one. Activate it.</li>
+<li>Run pip install -r requirements.txt. Grab a cup of tea/coffee. Come back to find all packages successfully installed.
+<code>
+pip install -r requirements.txt
+</code>
+</li>
+<li>Head to settings/aws.py and update your AWS credentials</li>
+</ul><div class="highlight"><pre><span class="c">#Your Amazon Web Services access key, as a string.</span>
+<span class="n">AWS_ACCESS_KEY_ID</span> <span class="o">=</span> <span class="s">""</span>
+
+<span class="c">#Your Amazon Web Services secret access key, as a string.</span>
+<span class="n">AWS_SECRET_ACCESS_KEY</span> <span class="o">=</span> <span class="s">""</span>
+</pre></div>
+
+<ul>
+<li>Put a database on your Heroku</li>
+</ul><pre><code>heroku addons:add heroku-postgresql:dev
+</code></pre>
+
+<ul>
+<li>Running your app locally</li>
+</ul><pre><code>fab run
+</code></pre>
+
+<ul>
+<li>Deploy your application</li>
+</ul><pre><code>fab deploy
+</code></pre>
+
+<h2>What's in the box</h2>
+
+<p>Check out requirements.txt for details on the dependencies. </p>
+
+<p>DHB comes with an opinionated but powerful arsenal of tools that will help you take over the
+world with your web app in no time </p>
+
+<ul>
+<li>Postgres for storing data</li>
+<li>Amazon S3 for static content</li>
+<li>Amazon SES for emails</li>
+<li>Redis as a key-value store</li>
+<li>Celery for background tasks</li>
+<li>Celerybeat for periodic tasks</li>
+<li>Fabric for housekeeping</li>
+</ul><p>All the settings are spread accross 6 files in the settings/ directory.</p>
+
+<ul>
+<li>aws.py contains AWS credentials and settings </li>
+<li>celerybeat.py has Celerybeat's schedule configuration </li>
+<li>common.py has all your standard Django jazz that is identical for dev and production environments</li>
+<li>dev.py contains development specific settings </li>
+<li>prod.py contains production specific settings</li>
+<li>static.py is used for collecstatic routine</li>
+</ul><h3>Static files</h3>
+
+<p>In settings/aws.py set the name of your S3 bucket for the project</p>
+
+<div class="highlight"><pre><span class="c">#Your Amazon Web Services storage bucket name, as a string.</span>
+<span class="n">AWS_STORAGE_BUCKET_NAME</span> <span class="o">=</span> <span class="s">""</span>
+</pre></div>
+
+<h3>Email</h3>
+
+<p>Assuming you've provided your AWS credentials in the settings file, email will just work. When running locally, emails will be dumped in the console. In production, DHB will send your love letters through Amazon SES (make sure you use a verified sender address when sending emails with SES) </p>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.core.mail</span> <span class="kn">import</span> <span class="n">send_mail</span>
+
+<span class="n">send_mail</span><span class="p">(</span><span class="s">'testing mail'</span><span class="p">,</span> <span class="s">'Here is the message.'</span><span class="p">,</span> <span class="s">'bob@mysite.com'</span><span class="p">,</span> <span class="p">[</span><span class="s">'bob@gmail.com'</span><span class="p">],</span> <span class="n">fail_silently</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+
+<h3>Database please</h3>
+
+<p>Of course. You first need to get Postrgres on your Heroku </p>
+
+<pre><code>heroku addons:add heroku-postgresql:dev
+</code></pre>
+
+<p>And you should be set.</p>
+
+<h3>Redis</h3>
+
+<p>Vegetables are good for you. Especially when they help you build amazing apps. DHB uses Redis as a broker for Celery, which in turn is used for running background tasks. </p>
+
+<p>If you don't have Redis running on your dev machine, get it <a href="http://redis.io/download">here</a>.</p>
+
+<p>Heroku offers an add-on called "Redis to go". Let's activate it    </p>
+
+<pre><code>heroku addons:add redistogo:nano
+</code></pre>
+
+<p>To see if it works</p>
+
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">redis</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">redis_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s">'REDISTOGO_URL'</span><span class="p">,</span> <span class="s">'redis://localhost:6379'</span><span class="p">)</span>
+<span class="n">redis_instance</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">redis_url</span><span class="p">)</span>
+<span class="n">redis_instance</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">'answer'</span><span class="p">,</span> <span class="mi">42</span><span class="p">)</span>
+</pre></div>
+
+<p>Once again, when running locally, make sure you have Redis server running on your machine.</p>
+
+<h3>Celery</h3>
+
+<p><a href="http://celeryproject.org">Celery</a> allows you to run bacground tasks. DHB uses Celery coupled with Redis. </p>
+
+<h3>Celerybeat</h3>
+
+<p>Celerybeat allows you to have periodic tasks associated with your app. Tasks configuration is stored in settings/celerybeat.py (cunning, I know). </p>
+
+<h2>Running</h2>
+
+<ul>
+<li>Let's make sure all the code is up to date</li>
+</ul><pre><code>git commit -a -m "initial commit"
+</code></pre>
+
+<ul>
+<li>Now you can deploy your app</li>
+</ul><pre><code>fab deploy
+</code></pre>
+
+<p>Deployment script takes care of several things</p>
+
+<p>** Pushing code to Heroku
+** Moving static assets to S3
+** Synchronizing database  </p>
+
+<ul>
+<li>Make sure both web instance and the celeryd worker are up</li>
+</ul><pre><code>heroku ps 
+</code></pre>
+
+<p>You should see both celeryd and web running. If celeryd is not there, run the following</p>
+
+<pre><code>heroku ps:scale celeryd=1
+</code></pre>
+
+<p>Same applies to celerybeat (assuming you need it):</p>
+
+<pre><code>heroku ps:scale celerybeat=1
+</code></pre>
+
+<ul>
+<li>Ta da! Your app is up running on Heroku</li>
+</ul><pre><code>heroku open
+</code></pre>
+
+<ul>
+<li>To run the local version:</li>
+</ul><pre><code>fab run
+</code></pre>
+
+<h2>Example App</h2>
+
+<p>/apps/examples contains a simple email form which you can use to test the setup. Navigate to /examples/email/ to try it. </p>
+
+<h2>Roadmap</h2>
+
+<ul>
+<li>Schema migrations with South</li>
+<li>Tests</li>
+<li>Caching</li>
+<li>File uploads</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/callmephilip">callmephilip</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
